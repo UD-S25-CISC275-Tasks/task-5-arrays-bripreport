@@ -45,7 +45,11 @@ export const removeDollars = (amounts: string[]): number[] => {
  * in question marks ("?").
  */
 export const shoutIfExclaiming = (messages: string[]): string[] => {
-    return [];
+    return messages
+        .filter((message) => !message.endsWith("?"))
+        .map((message) =>
+            message.endsWith("!") ? message.toUpperCase() : message,
+        );
 };
 
 /**
@@ -53,7 +57,7 @@ export const shoutIfExclaiming = (messages: string[]): string[] => {
  * 4 letters long.
  */
 export function countShortWords(words: string[]): number {
-    return 0;
+    return words.filter((word) => word.length < 4).length;
 }
 
 /**
@@ -62,7 +66,7 @@ export function countShortWords(words: string[]): number {
  * then return true.
  */
 export function allRGB(colors: string[]): boolean {
-    return false;
+    return colors.every((color) => ["red", "blue", "green"].includes(color));
 }
 
 /**
@@ -73,7 +77,9 @@ export function allRGB(colors: string[]): boolean {
  * And the array [] would become "0=0".
  */
 export function makeMath(addends: number[]): string {
-    return "";
+    return addends.length === 0 ?
+            "0=0"
+        :   `${addends.reduce((a, b) => a + b)}=${addends.join("+")}`;
 }
 
 /**
@@ -86,5 +92,16 @@ export function makeMath(addends: number[]): string {
  * And the array [1, 9, 7] would become [1, 9, 7, 17]
  */
 export function injectPositive(values: number[]): number[] {
-    return [];
+    const negativeIndex = values.findIndex((value) => value < 0);
+    const sumBeforeNegative = values
+        .slice(0, negativeIndex)
+        .reduce((a, b) => a + b, 0);
+
+    return negativeIndex === -1 ?
+            [...values, values.reduce((a, b) => a + b, 0)]
+        :   [
+                ...values.slice(0, negativeIndex + 1),
+                sumBeforeNegative,
+                ...values.slice(negativeIndex + 1),
+            ];
 }
